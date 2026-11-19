@@ -16,6 +16,8 @@
     'Lean around corners': '모퉁이에서 몸 기울이기',
     'Reload · weapon light · laser': '재장전 · 무기 조명 · 레이저',
     'Toggle performance mode': '성능 모드 전환',
+    '● REC': '● 녹화',
+    'UNIT K-41 · CAM 07': '유닛 K-41 · 캠 07',
     'BODY CAMERA · BUILDING CLEARANCE': '바디캠 · 건물 소탕',
     'AUDIO ON · 1080P30': '오디오 켜짐 · 1080P30',
     '1-4 / WHEEL WEAPON · V ECHO PULSE · R RELOAD · F LIGHT · L LASER · Q/E LEAN': '1-4 / 휠 무기 · V 에코 펄스 · R 재장전 · F 조명 · L 레이저 · Q/E 기울이기',
@@ -37,11 +39,12 @@
   };
 
   var PATTERNS = [
-    [/^● ?REC KESTREL BWC-2 UNIT K-41 · CAM 07$/, '● 녹화 KESTREL BWC-2 유닛 K-41 · 캠 07'],
-    [/^REC KESTREL BWC-2 UNIT K-41 · CAM 07$/, '녹화 KESTREL BWC-2 유닛 K-41 · 캠 07'],
-    [/^HOSTILE DOWN (\d+)\/(\d+)$/, '적 사살 $1/$2'],
-    [/^CLEAR THE BUILDING · (\d+) HOSTILES$/, '건물을 소탕하라 · 적 $1명'],
-    [/^ECHO\s+([\d.]+)\s*s$/, '에코 $1초']
+    [/^HOSTILE DOWN\s+(\d+)\/(\d+)$/, '적 사살 $1/$2'],
+    [/^CLEAR THE BUILDING\s+·\s+(\d+) HOSTILES$/, '건물을 소탕하라 · 적 $1명'],
+    [/^ECHO READY\s+\[V\]$/, '에코 준비 [V]'],
+    [/^ECHO\s+([\d.]+)\s*s$/, '에코 $1초'],
+    [/^(\d+ [A-Z0-9 ]+?)\s+RELOADING$/, '$1 재장전 중'],
+    [/^Failed to start: (.*)$/, '시작 실패: $1']
   ];
 
   /* 결과 화면 통계(#endStats) 안에서만 쓰는 단어 */
