@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CONCRETE ECHO</title>
+<style>
+  :root { --ink: #e9ece8; --dim: rgba(233, 236, 232, 0.62); --red: #ff3b30; --amber: #ffc24a; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+  body { font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", monospace; color: var(--ink); user-select: none; -webkit-user-select: none; }
+  #c { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+
+  #hud { position: fixed; inset: 0; display: none; pointer-events: none; font-size: 13px; letter-spacing: 0.08em; text-shadow: 0 0 3px rgba(0, 0, 0, 0.9), 0 1px 1px #000; }
+  #hud > div { position: absolute; }
+  #tl { top: 22px; left: 28px; }
+  #rec { color: var(--red); margin-right: 8px; }
+  #tr { top: 22px; right: 28px; text-align: right; font-variant-numeric: tabular-nums; }
+  #tr small, #tl small { display: block; color: var(--dim); font-size: 11px; margin-top: 3px; }
+  #ammo { bottom: 24px; right: 28px; font-size: 15px; color: var(--dim); font-variant-numeric: tabular-nums; }
+  #ammo.low { color: var(--amber); }
+  #echo { bottom: 48px; right: 28px; font-size: 11px; color: var(--dim); opacity: 0.7; font-variant-numeric: tabular-nums; }
+  #echo.ready { color: var(--amber); opacity: 1; }
+  #feed { top: 62px; left: 0; right: 0; text-align: center; opacity: 0; transition: opacity 0.6s; }
+  #keys { bottom: 24px; left: 28px; color: var(--dim); font-size: 11px; transition: opacity 1.5s; }
+
+  .overlay { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 24px; }
+  #menu { background: radial-gradient(ellipse at center, rgba(8, 10, 10, 0.55), rgba(0, 0, 0, 0.92)); }
+  #pause, #end { display: none; background: rgba(0, 0, 0, 0.62); }
+  #pause { cursor: pointer; }
+  h1 { font-size: clamp(34px, 7vw, 76px); letter-spacing: 0.2em; margin: 0 0 6px; font-weight: 700; text-wrap: balance; }
+  .sub { color: var(--dim); letter-spacing: 0.3em; font-size: 12px; margin-bottom: 34px; }
+  .controls { display: grid; grid-template-columns: auto auto; gap: 7px 22px; text-align: left; font-size: 12px; color: var(--dim); margin: 0 0 32px; }
+  .controls b { color: var(--ink); font-weight: 600; text-align: right; }
+  button { font: inherit; letter-spacing: 0.25em; font-size: 14px; color: #000; background: var(--ink); border: 0; padding: 14px 34px; cursor: pointer; }
+  button:hover { background: #fff; }
+  button:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+  #startBtn { display: none; }
+  #loading { width: min(320px, 70vw); }
+  #track { height: 3px; background: rgba(255, 255, 255, 0.16); }
+  #bar { height: 100%; width: 0; background: var(--ink); transition: width 0.15s; }
+  #note { margin-top: 10px; font-size: 11px; color: var(--dim); letter-spacing: 0.2em; min-height: 14px; }
+  #endTitle { font-size: clamp(28px, 6vw, 60px); letter-spacing: 0.22em; margin-bottom: 22px; }
+  #endTitle.bad { color: var(--red); }
+  #endStats { font-size: 13px; line-height: 2; color: var(--dim); margin-bottom: 30px; letter-spacing: 0.14em; }
+  #endStats b { color: var(--ink); }
+  .hint { margin-top: 14px; font-size: 11px; color: var(--dim); letter-spacing: 0.2em; }
+</style>
+<script type="importmap">{ "imports": { "three": "./vendor/three.module.js" } }</script>
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<div id="hud">
+  <div id="tl"><span id="rec">● REC</span>KESTREL BWC-2<small>UNIT K-41 · CAM 07</small></div>
+  <div id="tr"><span id="stamp"></span><small>AUDIO ON · 1080P30</small></div>
+  <div id="feed"></div>
+  <div id="keys">1-4 / WHEEL WEAPON · V ECHO PULSE · R RELOAD · F LIGHT · L LASER · Q/E LEAN</div>
+  <div id="echo"></div>
+  <div id="ammo"></div>
+</div>
+
+<div id="menu" class="overlay">
+  <h1>CONCRETE ECHO</h1>
+  <div class="sub">BODY CAMERA · BUILDING CLEARANCE</div>
+  <div class="controls">
+    <b>W A S D</b><span>Move</span>
+    <b>MOUSE</b><span>Aim the weapon (the camera follows)</span>
+    <b>LEFT / RIGHT CLICK</b><span>Fire / aim down the sights</span>
+    <b>1 2 3 4 · WHEEL</b><span>Rifle · pistol · shotgun · Thumper</span>
+    <b>V</b><span>Echo pulse: see hostiles through walls. They hear it.</span>
+    <b>SHIFT · C · SPACE</b><span>Sprint · crouch · jump</span>
+    <b>Q / E</b><span>Lean around corners</span>
+    <b>R · F · L</b><span>Reload · weapon light · laser</span>
+    <b>P</b><span>Toggle performance mode</span>
+  </div>
+  <div id="loading"><div id="track"><div id="bar"></div></div><div id="note">Loading</div></div>
+  <button id="startBtn">DEPLOY</button>
+</div>
+
+<div id="pause" class="overlay"><div id="endTitle2" style="font-size:22px;letter-spacing:.3em">PAUSED</div><div class="hint">CLICK TO RESUME</div></div>
+
+<div id="end" class="overlay">
+  <div id="endTitle"></div>
+  <div id="endStats"></div>
+  <button id="againBtn">REDEPLOY</button>
+  <div class="hint">OR PRESS ENTER</div>
+</div>
+
+<script src="./ko.js"></script>
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>
