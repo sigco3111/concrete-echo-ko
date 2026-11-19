@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,7 +8,7 @@
   :root { --ink: #e9ece8; --dim: rgba(233, 236, 232, 0.62); --red: #ff3b30; --amber: #ffc24a; }
   * { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
-  body { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; color: var(--ink); user-select: none; -webkit-user-select: none; }
+  body { font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", monospace; color: var(--ink); user-select: none; -webkit-user-select: none; }
   #c { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
 
   #hud { position: fixed; inset: 0; display: none; pointer-events: none; font-size: 13px; letter-spacing: 0.08em; text-shadow: 0 0 3px rgba(0, 0, 0, 0.9), 0 1px 1px #000; }
@@ -87,6 +87,7 @@
   <div class="hint">OR PRESS ENTER</div>
 </div>
 
+<script src="./ko.js"></script>
 <script type="module" src="./src/main.js"></script>
 </body>
 </html>
