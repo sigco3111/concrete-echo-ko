@@ -5,9 +5,9 @@
 - 원작: [Rikinshah787/Game-Fable-5.2](https://github.com/Rikinshah787/Game-Fable-5.2) (원본 리드미: [README.en.md](README.en.md))
 - 바로 플레이: **<https://sigco3111.github.io/concrete-echo-ko/>**
 
-![한국어 메인 메뉴](docs/screenshot-menu-ko.png)
+![한국어 메인 메뉴](docs/5-screenshot-menu-ko.png)
 
-![한국어 게임 플레이 화면: 그래피티가 그려진 벽 앞의 적을 바디캠으로 바라보는 모습](docs/screenshot-game-ko.png)
+![한국어 게임 플레이 화면: 그래피티가 그려진 벽 앞의 적을 바디캠으로 바라보는 모습](docs/6-screenshot-game-ko.png)
 
 ## 특징
 
